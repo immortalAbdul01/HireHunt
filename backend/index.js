@@ -7,34 +7,45 @@ import userRoute from "./routes/user.route.js";
 import companyRoute from "./routes/company.route.js";
 import jobRoute from "./routes/job.route.js";
 import applicationRoute from "./routes/application.route.js";
+import crypto from 'crypto'
+const secret = crypto.randomBytes(64).toString('hex');
+console.log(secret);
 
 dotenv.config({});
 
 const app = express();
 
-// middleware
+// Middleware
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Debugging CORS origin
 const corsOptions = {
-    origin:'http://localhost:5173',
-    credentials:true
-}
+    origin: (origin, callback) => {
+        console.log(`Origin: ${origin}`);
+        // Allow requests with no origin (like mobile apps, Postman, etc.)
+        if (!origin) return callback(null, true);
+        if (['http://localhost:5173', 'http://your-frontend-url.com'].indexOf(origin) === -1) {
+            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true
+};
 
 app.use(cors(corsOptions));
 
 const PORT = process.env.PORT || 3000;
 
-
-// api's
+// API Routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/company", companyRoute);
 app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/application", applicationRoute);
 
-
-
-app.listen(PORT,()=>{
+app.listen(PORT, () => {
     connectDB();
     console.log(`Server running at port ${PORT}`);
-})
+});

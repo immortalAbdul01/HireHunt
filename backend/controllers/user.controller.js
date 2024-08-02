@@ -7,7 +7,7 @@ import cloudinary from "../utils/cloudinary.js";
 export const register = async (req, res) => {
     try {
         const { fullname, email, phoneNumber, password, role } = req.body;
-         
+
         if (!fullname || !email || !phoneNumber || !password || !role) {
             return res.status(400).json({
                 message: "Something is missing",
@@ -43,13 +43,13 @@ export const register = async (req, res) => {
             success: true
         });
     } catch (error) {
-        console.log(error);
+        console.log(error.msg);
     }
 }
 export const login = async (req, res) => {
     try {
         const { email, password, role } = req.body;
-        
+
         if (!email || !password || !role) {
             return res.status(400).json({
                 message: "Something is missing",
@@ -70,7 +70,7 @@ export const login = async (req, res) => {
                 success: false,
             })
         };
-        // check role is correct or not
+       
         if (role !== user.role) {
             return res.status(400).json({
                 message: "Account doesn't exist with current role.",
@@ -114,9 +114,9 @@ export const logout = async (req, res) => {
 export const updateProfile = async (req, res) => {
     try {
         const { fullname, email, phoneNumber, bio, skills } = req.body;
-        
+
         const file = req.file;
-        // cloudinary ayega idhar
+
         const fileUri = getDataUri(file);
         const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
@@ -135,14 +135,14 @@ export const updateProfile = async (req, res) => {
                 success: false
             })
         }
-        // updating data
+
         if(fullname) user.fullname = fullname
         if(email) user.email = email
         if(phoneNumber)  user.phoneNumber = phoneNumber
         if(bio) user.profile.bio = bio
         if(skills) user.profile.skills = skillsArray
-      
-        // resume comes later here...
+
+
         if(cloudResponse){
             user.profile.resume = cloudResponse.secure_url // save the cloudinary url
             user.profile.resumeOriginalName = file.originalname // Save the original file name
