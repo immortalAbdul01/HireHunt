@@ -6,6 +6,7 @@ import connectDB from "./utils/db.js";
 import userRoute from "./routes/user.route.js";
 import companyRoute from "./routes/company.route.js";
 import jobRoute from "./routes/job.route.js";
+
 import applicationRoute from "./routes/application.route.js";
 import crypto from 'crypto';
 
@@ -23,10 +24,9 @@ app.use(cookieParser());
 
 // Simplified CORS setup
 const allowedOrigins = [
-	'http://localhost:5173',
-	'https://hire-hunt-back.vercel.app/',
+  'http://localhost:5173',
   'https://hire-hunt-front.vercel.app',
-  'https://hire-hunt.vercel.app'
+  'https://hire-hunt-back.vercel.app'
 ];
 
 app.use(cors({
@@ -41,6 +41,15 @@ app.use(cors({
   },
   credentials: true
 }));
+
+// Manually add CORS headers
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  next();
+});
 
 const PORT = process.env.PORT || 3000;
 
