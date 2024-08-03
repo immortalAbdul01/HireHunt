@@ -23,7 +23,8 @@ app.use(cookieParser());
 
 // Simplified CORS setup
 const allowedOrigins = [
-  'http://localhost:5173',
+	'http://localhost:5173',
+	'https://hire-hunt-back.vercel.app/',
   'https://hire-hunt-front.vercel.app',
   'https://hire-hunt.vercel.app'
 ];
