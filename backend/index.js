@@ -7,7 +7,8 @@ import userRoute from "./routes/user.route.js";
 import companyRoute from "./routes/company.route.js";
 import jobRoute from "./routes/job.route.js";
 import applicationRoute from "./routes/application.route.js";
-import crypto from 'crypto'
+import crypto from 'crypto';
+
 const secret = crypto.randomBytes(64).toString('hex');
 console.log(secret);
 
@@ -20,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Debugging CORS origin
+// Debugging CORS origin (Existing policy)
 const corsOptions = {
     origin: (origin, callback) => {
         console.log(`Origin: ${origin}`);
@@ -35,7 +36,16 @@ const corsOptions = {
     credentials: true
 };
 
+// New static CORS policy
+const staticCorsOptions = {
+    origin: ['https://deploy-mern-lwqh.vercel.app'],
+    methods: ['POST', 'GET'],
+    credentials: true
+};
+
+// Apply both CORS policies
 app.use(cors(corsOptions));
+app.use(cors(staticCorsOptions));
 
 const PORT = process.env.PORT || 3000;
 
