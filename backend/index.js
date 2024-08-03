@@ -21,30 +21,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Combined CORS options
+// Simplified CORS setup
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://hire-hunt-front.vercel.app',  // Your frontend URL
-  'https://deploy-mern-lwqh.vercel.app'  // Any other allowed origins
+  'https://hire-hunt-front.vercel.app',
+  'https://hire-hunt.vercel.app'
 ];
 
-const corsOptions = {
-    origin: (origin, callback) => {
-        console.log(`Origin: ${origin}`);
-        // Allow requests with no origin (like mobile apps, Postman, etc.)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
 
 const PORT = process.env.PORT || 3000;
 
@@ -55,6 +50,6 @@ app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/application", applicationRoute);
 
 app.listen(PORT, () => {
-    connectDB();
-    console.log(`Server running at port ${PORT}`);
+  connectDB();
+  console.log(`Server running at port ${PORT}`);
 });
