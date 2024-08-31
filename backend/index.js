@@ -25,8 +25,7 @@ app.use(cookieParser());
 // Simplified CORS setup
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://hire-hunt-front.vercel.app',
-  'https://hire-hunt-back.vercel.app'
+  'https://hire-hunt.vercel.app/'
 ];
 
 app.use(cors({
@@ -44,7 +43,7 @@ app.use(cors({
 
 // Manually add CORS headers
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin','https://hire-hunt-front.vercel.app');
+  res.header('Access-Control-Allow-Origin','https://hire-hunt.vercel.app/');
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
